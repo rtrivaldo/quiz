@@ -10,96 +10,140 @@ export default function QuizCard({
   choices,
   correctAnswer,
   totalQuestion,
-  timerDuration = 30, // Set default timer duration to 30 seconds for the entire quiz
+  timerDuration = 30, // Default timer duration is 30 seconds for the entire quiz
 }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [totalScore, setTotalScore] = useState(0);
-  const [totalWrongAnswers, setTotalWrongAnswers] = useState(0); // New state for total wrong answers
+  const [totalWrongAnswers, setTotalWrongAnswers] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [shuffledChoices, setShuffledChoices] = useState([]);
   const [timer, setTimer] = useState(timerDuration);
-  const [isFinished, setIsFinished] = useState(false); // New state to check if quiz is finished
+  const [isFinished, setIsFinished] = useState(false);
+
+  // Save progress to localStorage
+  const saveProgress = () => {
+    const progress = {
+      currentQuestion,
+      totalScore,
+      totalWrongAnswers,
+      timer,
+      lastUpdated: new Date().getTime(), // Save the current timestamp
+    };
+    localStorage.setItem('quizProgress', JSON.stringify(progress));
+  };
+
+  // Load progress from localStorage and calculate time difference
+  const loadProgress = () => {
+    const savedProgress = localStorage.getItem('quizProgress');
+    if (savedProgress) {
+      const {
+        currentQuestion,
+        totalScore,
+        totalWrongAnswers,
+        timer,
+        lastUpdated,
+      } = JSON.parse(savedProgress);
+
+      const now = new Date().getTime();
+      const timeElapsed = Math.floor((now - lastUpdated) / 1000); // Calculate elapsed time in seconds
+      const newTimer = timer - timeElapsed;
+
+      setCurrentQuestion(currentQuestion);
+      setTotalScore(totalScore);
+      setTotalWrongAnswers(totalWrongAnswers);
+      setTimer(newTimer > 0 ? newTimer : 0); // Set the timer to the remaining time or 0 if time elapsed
+    }
+  };
+
+  // Clear localStorage when quiz is finished
+  const clearProgress = () => {
+    localStorage.removeItem('quizProgress');
+  };
 
   // Function to shuffle an array
   const shuffleArray = array => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+      [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
   };
 
   useEffect(() => {
+    // Load progress when the component mounts
+    loadProgress();
+
     // Shuffle choices when the component mounts
     const shuffled = choices.map(choiceSet => shuffleArray([...choiceSet]));
     setShuffledChoices(shuffled);
   }, [choices]);
 
   useEffect(() => {
-    // Start timer countdown for the entire quiz
+    // Start timer countdown
     if (timer > 0 && !isFinished && currentQuestion <= totalQuestion) {
       const interval = setInterval(() => {
         setTimer(prevTimer => prevTimer - 1);
+        saveProgress(); // Save progress on each timer update
       }, 1000);
 
       return () => clearInterval(interval); // Clear interval on component unmount
     } else if (timer === 0 || currentQuestion > totalQuestion) {
       setIsFinished(true);
+      clearProgress(); // Clear progress when the quiz is finished
     }
-  }, [timer, isFinished, totalQuestion]);
+  }, [timer, isFinished, totalQuestion, currentQuestion]);
 
   const handleAnswerClick = choice => {
-    // Prevent further clicks if already selected
     if (selectedAnswer !== null) return;
 
     setSelectedAnswer(choice);
-    // Check if the selected answer is correct
     if (choice === correctAnswer[currentQuestion - 1]) {
-      setTotalScore(totalScore + 1);
+      setTotalScore(prevScore => prevScore + 1);
     } else {
-      setTotalWrongAnswers(totalWrongAnswers + 1); // Increment wrong answers if the choice is incorrect
+      setTotalWrongAnswers(prevWrong => prevWrong + 1);
     }
 
     setTimeout(() => {
-      setCurrentQuestion(currentQuestion + 1);
+      setCurrentQuestion(prevQuestion => prevQuestion + 1);
       setSelectedAnswer(null);
     }, 500);
   };
 
-  // Check if all questions are answered or the quiz is finished
   if (currentQuestion > totalQuestion || isFinished) {
     return (
       <div className='text-center'>
-        <h1 className='text-4xl font-semibold'>Your Final Result!</h1>
+        <h1 className='text-3xl lg:text-4xl font-semibold'>
+          Your Final Result!
+        </h1>
 
         <div className='mt-6 grid grid-cols-2 gap-4 justify-center'>
-          <div className='bg-zinc-200/50  py-8 flex flex-col justify-center items-center rounded-xl'>
-            <p className='text-xl font-semibold'>Correct Answer</p>
-            <p className='mt-2 text-6xl font-semibold text-teal-700'>
+          <div className='bg-zinc-200/50 py-6 md:py-8 flex flex-col justify-center items-center rounded-xl'>
+            <p className='text-lg lg:text-xl font-semibold'>Correct Answer</p>
+            <p className='mt-2 text-4xl lg:text-6xl font-semibold text-teal-600'>
               {totalScore}
             </p>
           </div>
-          <div className='bg-zinc-200/50  py-6 flex flex-col justify-center items-center rounded-xl'>
-            <p className='text-xl font-semibold'>Incorrect Answer</p>
-            <p className='mt-2 text-6xl font-semibold text-teal-700'>
+          <div className='bg-zinc-200/50 py-6 md:py-8 flex flex-col justify-center items-center rounded-xl'>
+            <p className='text-lg lg:text-xl font-semibold'>Incorrect Answer</p>
+            <p className='mt-2 text-4xl lg:text-6xl font-semibold text-red-700'>
               {totalWrongAnswers}
             </p>
           </div>
-          <div className='bg-zinc-200/50  py-6 flex flex-col justify-center items-center rounded-xl'>
-            <p className='text-xl font-semibold'>Total Answered</p>
-            <p className='mt-2 text-6xl font-semibold text-teal-700'>
+          <div className='bg-zinc-200/50 py-6 md:py-8 flex flex-col justify-center items-center rounded-xl'>
+            <p className='text-lg lg:text-xl font-semibold'>Total Answered</p>
+            <p className='mt-2 text-4xl lg:text-6xl font-semibold'>
               {totalQuestion}
             </p>
           </div>
-          <div className='bg-zinc-200/50  py-6 flex flex-col justify-center items-center rounded-xl'>
-            <p className='text-xl font-semibold'>Time Taken</p>
-            <p className='mt-2 text-6xl font-semibold text-teal-700'>
+          <div className='bg-zinc-200/50 py-6 md:py-8 flex flex-col justify-center items-center rounded-xl'>
+            <p className='text-lg lg:text-xl font-semibold'>Time Taken</p>
+            <p className='mt-2 text-4xl lg:text-6xl font-semibold'>
               {timerDuration - timer}s
             </p>
           </div>
         </div>
 
-        <Button asChild className='mt-2'>
+        <Button asChild className='mt-6 w-full text-base' size='lg'>
           <Link href={'/'}>Attempt another quiz!</Link>
         </Button>
       </div>
@@ -125,9 +169,9 @@ export default function QuizCard({
             className={`${
               selectedAnswer === choice
                 ? choice === correctAnswer[currentQuestion - 1]
-                  ? 'bg-teal-400' // Correct answer selected
-                  : 'bg-red-400' // Incorrect answer selected
-                : 'bg-zinc-200' // Default background
+                  ? 'bg-teal-400'
+                  : 'bg-red-400'
+                : 'bg-zinc-200'
             } p-4 rounded-md font-semibold cursor-pointer`}
             onClick={() => handleAnswerClick(choice)}
           >
