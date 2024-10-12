@@ -3,13 +3,22 @@
 import { Combobox } from '@/components/combobox/combobox';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function GenerateQuizCard() {
   const [difficultyValue, setDifficultyValue] = useState('any');
   const [categoryValue, setCategoryValue] = useState('any');
   const [typeValue, setTypeValue] = useState('any');
   const [numQuestionsValue, setNumQuestionsValue] = useState(10);
+  const [hasSavedProgress, setHasSavedProgress] = useState(false);
+
+  useEffect(() => {
+    // Check if there is saved progress in localStorage
+    const savedProgress = localStorage.getItem('quizProgress');
+    if (savedProgress) {
+      setHasSavedProgress(true);
+    }
+  }, []);
 
   const handleDifficultyChange = selectedValue => {
     setDifficultyValue(selectedValue);
@@ -27,8 +36,24 @@ export default function GenerateQuizCard() {
     setNumQuestionsValue(value);
   };
 
-  return (
-    <div className='sm:p-6 rounded-xl sm:border border-zinc-900/10 sm :shadow-md w-full md:w-4/5 lg:w-auto'>
+  return hasSavedProgress ? (
+    <Button className='mt-6 w-[200px] text-base' asChild size='lg'>
+      <Link
+        href={{
+          pathname: '/quiz',
+          query: {
+            difficulty: difficultyValue,
+            category: categoryValue,
+            type: typeValue,
+            question: numQuestionsValue,
+          },
+        }}
+      >
+        Resume Quiz
+      </Link>
+    </Button>
+  ) : (
+    <div className='sm:p-6 rounded-xl sm:border border-zinc-900/10 sm:shadow-md w-full md:w-4/5 lg:w-auto'>
       <h1 className='text-2xl font-medium text-center'>Generate Quiz Now!</h1>
 
       <div className='mt-6 flex flex-col lg:flex-row gap-2 lg:gap-4'>
@@ -98,138 +123,42 @@ export default function GenerateQuizCard() {
 }
 
 const difficulty = [
-  {
-    value: 'any',
-    label: 'Any Difficulty',
-  },
-  {
-    value: 'easy',
-    label: 'Easy',
-  },
-  {
-    value: 'medium',
-    label: 'Medium',
-  },
-  {
-    value: 'hard',
-    label: 'Hard',
-  },
+  { value: 'any', label: 'Any Difficulty' },
+  { value: 'easy', label: 'Easy' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'hard', label: 'Hard' },
 ];
 
 const category = [
-  {
-    value: 'any',
-    label: 'Any Category',
-  },
-  {
-    value: '9',
-    label: 'General Knowledge',
-  },
-  {
-    value: '10',
-    label: 'Entertainment: Books',
-  },
-  {
-    value: '11',
-    label: 'Entertainment: Film',
-  },
-  {
-    value: '12',
-    label: 'Entertainment: Music',
-  },
-  {
-    value: '13',
-    label: 'Entertainment: Musicals & Theatres',
-  },
-  {
-    value: '14',
-    label: 'Entertainment: Television',
-  },
-  {
-    value: '15',
-    label: 'Entertainment: Video Games',
-  },
-  {
-    value: '16',
-    label: 'Entertainment: Board Games',
-  },
-  {
-    value: '17',
-    label: 'Science & Nature',
-  },
-  {
-    value: '18',
-    label: 'Science: Computers',
-  },
-  {
-    value: '19',
-    label: 'Science: Mathematics',
-  },
-  {
-    value: '20',
-    label: 'Mythology',
-  },
-  {
-    value: '21',
-    label: 'Sports',
-  },
-  {
-    value: '22',
-    label: 'Geography',
-  },
-  {
-    value: '23',
-    label: 'History',
-  },
-  {
-    value: '24',
-    label: 'Politics',
-  },
-  {
-    value: '25',
-    label: 'Art',
-  },
-  {
-    value: '26',
-    label: 'Celebrities',
-  },
-  {
-    value: '27',
-    label: 'Animals',
-  },
-  {
-    value: '28',
-    label: 'Vehicles',
-  },
-  {
-    value: '29',
-    label: 'Entertainment: Comics',
-  },
-  {
-    value: '30',
-    label: 'Science: Gadgets',
-  },
-  {
-    value: '31',
-    label: 'Entertainment: Japanese Anime & Manga',
-  },
-  {
-    value: '32',
-    label: 'Entertainment: Cartoon & Animations',
-  },
+  { value: 'any', label: 'Any Category' },
+  { value: '9', label: 'General Knowledge' },
+  { value: '10', label: 'Entertainment: Books' },
+  { value: '11', label: 'Entertainment: Film' },
+  { value: '12', label: 'Entertainment: Music' },
+  { value: '13', label: 'Entertainment: Musicals & Theatres' },
+  { value: '14', label: 'Entertainment: Television' },
+  { value: '15', label: 'Entertainment: Video Games' },
+  { value: '16', label: 'Entertainment: Board Games' },
+  { value: '17', label: 'Science & Nature' },
+  { value: '18', label: 'Science: Computers' },
+  { value: '19', label: 'Science: Mathematics' },
+  { value: '20', label: 'Mythology' },
+  { value: '21', label: 'Sports' },
+  { value: '22', label: 'Geography' },
+  { value: '23', label: 'History' },
+  { value: '24', label: 'Politics' },
+  { value: '25', label: 'Art' },
+  { value: '26', label: 'Celebrities' },
+  { value: '27', label: 'Animals' },
+  { value: '28', label: 'Vehicles' },
+  { value: '29', label: 'Entertainment: Comics' },
+  { value: '30', label: 'Science: Gadgets' },
+  { value: '31', label: 'Entertainment: Japanese Anime & Manga' },
+  { value: '32', label: 'Entertainment: Cartoon & Animations' },
 ];
 
 const type = [
-  {
-    value: 'any',
-    label: 'Any Type',
-  },
-  {
-    value: 'multiple',
-    label: 'Multiple Choices',
-  },
-  {
-    value: 'boolean',
-    label: 'True / False',
-  },
+  { value: 'any', label: 'Any Type' },
+  { value: 'multiple', label: 'Multiple Choices' },
+  { value: 'boolean', label: 'True / False' },
 ];
