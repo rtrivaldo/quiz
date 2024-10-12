@@ -1,4 +1,4 @@
-# <center>Quiz Generator</center>
+# <h1 align=center>Quiz Generator</h1>
 
 ![Banner](public/banner.jpeg)
 
