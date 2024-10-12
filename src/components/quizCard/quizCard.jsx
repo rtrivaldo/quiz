@@ -11,7 +11,7 @@ export default function QuizCard({
   choices,
   correctAnswer,
   totalQuestion,
-  timerDuration = 30, // Default timer duration is 30 seconds for the entire quiz
+  timerDuration = 3 * totalQuestion, // Default timer duration is 30 seconds for the entire quiz
 }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [totalScore, setTotalScore] = useState(0);
@@ -86,6 +86,7 @@ export default function QuizCard({
   }, [timer, isFinished, totalQuestion, currentQuestion]);
 
   const handleAnswerClick = choice => {
+    /* prevent user clicking more then once after question answered */
     if (selectedAnswer !== null) return;
 
     setSelectedAnswer(choice);
@@ -167,7 +168,7 @@ export default function QuizCard({
             } p-4 rounded-md font-semibold cursor-pointer`}
             onClick={() => handleAnswerClick(choice)}
           >
-            {choice}
+            {decodeHTMLEntities(choice)}
           </div>
         ))}
       </div>
