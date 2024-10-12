@@ -83,7 +83,7 @@ export default function QuizCard({
       setIsFinished(true);
       clearProgress(); // Clear progress when the quiz is finished
     }
-  }, [timer, isFinished, totalQuestion, currentQuestion]);
+  }, [timer, isFinished, totalQuestion]);
 
   const handleAnswerClick = choice => {
     /* prevent user clicking more then once after question answered */
