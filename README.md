@@ -1,4 +1,6 @@
-# Quiz Generator
+# <center>Quiz Generator</center>
+
+![Banner](public/banner.jpeg)
 
 ## Overview
 
