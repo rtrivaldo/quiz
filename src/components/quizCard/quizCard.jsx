@@ -4,6 +4,7 @@ import decodeHTMLEntities from '@/lib/decodeHTMLEntities';
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import shuffleArray from '@/lib/shuffleArray';
 
 export default function QuizCard({
   question,
@@ -51,22 +52,13 @@ export default function QuizCard({
       setCurrentQuestion(currentQuestion);
       setTotalScore(totalScore);
       setTotalWrongAnswers(totalWrongAnswers);
-      setTimer(newTimer > 0 ? newTimer : 0); // Set the timer to the remaining time or 0 if time elapsed
+      setTimer(newTimer > 0 ? newTimer : 0);
     }
   };
 
   // Clear localStorage when quiz is finished
   const clearProgress = () => {
     localStorage.removeItem('quizProgress');
-  };
-
-  // Function to shuffle an array
-  const shuffleArray = array => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
   };
 
   useEffect(() => {
