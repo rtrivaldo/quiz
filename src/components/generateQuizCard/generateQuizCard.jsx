@@ -37,7 +37,6 @@ export default function GenerateQuizCard() {
           <Combobox
             options={difficulty}
             placeholder='Select Difficulty'
-            searchPlaceholder='Search difficulty'
             defaultValue='any'
             className='mt-2 w-full min-w-[200px]'
             onChange={handleDifficultyChange}
@@ -49,7 +48,6 @@ export default function GenerateQuizCard() {
           <Combobox
             options={category}
             placeholder='Select Category'
-            searchPlaceholder='Search category'
             defaultValue='any'
             className='mt-2 w-full min-w-[320px]'
             onChange={handleCategoryChange}
@@ -61,7 +59,6 @@ export default function GenerateQuizCard() {
           <Combobox
             options={type}
             placeholder='Select Type'
-            searchPlaceholder='Search type'
             defaultValue='any'
             className='mt-2 w-full min-w-[200px]'
             onChange={handleTypeChange}

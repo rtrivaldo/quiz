@@ -7,9 +7,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
@@ -22,7 +20,6 @@ import {
 export function Combobox({
   options,
   placeholder = '',
-  searchPlaceholder = '',
   className,
   defaultValue = '',
   onChange,
@@ -59,9 +56,7 @@ export function Combobox({
 
         <PopoverContent className='w-full p-0'>
           <Command>
-            <CommandInput placeholder={searchPlaceholder} />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>
                 {options.map(option => (
                   <CommandItem
