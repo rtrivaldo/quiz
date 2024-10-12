@@ -125,7 +125,7 @@ export default function QuizCard({
           <div className='bg-zinc-200/50 py-6 md:py-8 flex flex-col justify-center items-center rounded-xl'>
             <p className='text-lg lg:text-xl font-semibold'>Total Answered</p>
             <p className='mt-2 text-4xl lg:text-6xl font-semibold'>
-              {totalQuestion}
+              {currentQuestion - 1}
             </p>
           </div>
           <div className='bg-zinc-200/50 py-6 md:py-8 flex flex-col justify-center items-center rounded-xl'>
