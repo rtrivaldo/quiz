@@ -90,7 +90,7 @@ export default function GenerateQuizCard() {
             },
           }}
         >
-          Generate Quiz
+          Start Quiz
         </Link>
       </Button>
     </div>
