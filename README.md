@@ -27,8 +27,13 @@ and the total number of questions.
 
 The Quiz Generator is deployed and hosted on Vercel. You can explore the live
 version of the project using the following link:
-
 [Live Demo](https://quiz-indol-iota.vercel.app/)
+
+**Disclaimer:** The authentication system in the live demo is currently using
+[Clerk](https://clerk.dev) in development mode. **This is not secure for
+real-world use**, and sensitive data like passwords and personal information
+should not be used. Certain features, such as email verification and password
+resets, may not work as expected.
 
 ## Installation
 
